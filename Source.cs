@@ -17,21 +17,23 @@ class Player
             infos.Ship.Direction = GetNextDirection(infos);
             infos.Ship.Thrust = GetThrust(infos);
 
-            var distanceToBrake = infos.Ship.Speed > 100
-                ? Helper.DistanceToBrake(infos.Ship.Speed, 100).ToString()
-                : "NA";
-
-            Console.Error.WriteLine($"Speed: {infos.Ship.Speed}, Thrust: {infos.Ship.Thrust}, Target: X={infos.Ship.Direction.X};Y={infos.Ship.Direction.Y}, Distance={infos.NextCheckPoint.Distance}, DistanceToBreak: {distanceToBrake}");
+            Console.Error.WriteLine($"Speed: {infos.Ship.Speed}, Thrust: {infos.Ship.Thrust}, Target: X={infos.Ship.Direction.X};Y={infos.Ship.Direction.Y}, Angle={infos.NextCheckPoint.Angle}, Distance={infos.NextCheckPoint.Distance}, DistanceToBreak: {Helper.DistanceToBrake(infos.Ship.Speed, Const.TargetSpeedOnBreakPoint)}");
             Console.WriteLine(infos.Ship.Direction.X + " " + infos.Ship.Direction.Y + " " + infos.Ship.Thrust);
         }
     }
 
     static int GetThrust(Infos infos)
     {
-        if (Math.Abs(infos.NextCheckPoint.Angle) >= 60)
+        if (Math.Abs(infos.NextCheckPoint.Angle) >= 50)
         {
             // Wrong direction
             return 0;
+        }
+
+        if (infos.NextCheckPoint.Distance < Const.SizeCheckpoint / 2 && infos.NextCheckPoint.Angle < 20)
+        {
+            // Good direction and almost in the checkpoint, we can speed up again
+            return 100;
         }
 
         var distanceToBrake = Helper.DistanceToBrake(infos.Ship.Speed, Const.TargetSpeedOnBreakPoint);
