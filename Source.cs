@@ -28,7 +28,7 @@ class Player
 
     static int GetThrust(Infos infos)
     {
-        if (Math.Abs(infos.NextCheckPoint.Angle) >= 90)
+        if (Math.Abs(infos.NextCheckPoint.Angle) >= 60)
         {
             // Wrong direction
             return 0;
